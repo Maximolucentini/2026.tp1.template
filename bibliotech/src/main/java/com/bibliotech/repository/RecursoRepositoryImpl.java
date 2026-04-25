@@ -2,6 +2,7 @@ package com.bibliotech.repository;
 
 
 import com.bibliotech.model.Recurso;
+import com.bibliotech.model.Categoria;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -28,5 +29,25 @@ public class RecursoRepositoryImpl<T extends Recurso> implements RecursoReposito
     @Override
     public List<T> buscarTodos() {
         return new ArrayList<>(recursos);
+    }
+    @Override
+    public List<T> buscarPorTitulo(String titulo) {
+        return recursos.stream()
+                .filter(recurso -> recurso.titulo().toLowerCase().contains(titulo.toLowerCase()))
+                .toList();
+    }
+
+    @Override
+    public List<T> buscarPorAutor(String autor) {
+        return recursos.stream()
+                .filter(recurso -> recurso.autor().toLowerCase().contains(autor.toLowerCase()))
+                .toList();
+    }
+
+    @Override
+    public List<T> buscarPorCategoria(Categoria categoria) {
+        return recursos.stream()
+                .filter(recurso -> recurso.categoria() == categoria)
+                .toList();
     }
 }
