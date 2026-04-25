@@ -3,6 +3,7 @@ package com.bibliotech.service;
 import com.bibliotech.exception.RecursoInvalidoException;
 import com.bibliotech.exception.RecursoNoEncontradoException;
 import com.bibliotech.model.Recurso;
+import com.bibliotech.model.Categoria;
 import com.bibliotech.repository.RecursoRepository;
 import java.util.List;
 import java.util.Optional;
@@ -52,5 +53,17 @@ public class RecursoService<T extends Recurso> {
 
     public List<T> buscarTodos() {
         return repository.buscarTodos();
+    }
+
+    public List<T> buscarPorTitulo(String titulo) {
+        return repository.buscarPorTitulo(titulo);
+    }
+
+    public List<T> buscarPorAutor(String autor) {
+        return repository.buscarPorAutor(autor);
+    }
+
+    public List<T> buscarPorCategoria(Categoria categoria) {
+        return repository.buscarPorCategoria(categoria);
     }
 }
