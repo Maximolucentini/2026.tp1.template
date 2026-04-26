@@ -6,6 +6,7 @@ import com.bibliotech.exception.PrestamoNoEncontradoException;
 import com.bibliotech.exception.RecursoNoDisponibleException;
 import com.bibliotech.exception.RecursoNoEncontradoException;
 import com.bibliotech.exception.SocioNoEncontradoException;
+import com.bibliotech.exception.SocioSancionadoException;
 import com.bibliotech.model.Prestamo;
 import com.bibliotech.model.Recurso;
 import com.bibliotech.model.Socio;
@@ -23,14 +24,17 @@ public class PrestamoService {
     private final PrestamoRepository prestamoRepository;
     private final RecursoRepository<Recurso> recursoRepository;
     private final SocioRepository socioRepository;
+    private final SancionService sancionService;
 
     public PrestamoService(
             PrestamoRepository prestamoRepository,
             RecursoRepository<Recurso> recursoRepository,
-            SocioRepository socioRepository) {
+            SocioRepository socioRepository,
+            SancionService sancionService) {
         this.prestamoRepository = prestamoRepository;
         this.recursoRepository = recursoRepository;
         this.socioRepository = socioRepository;
+        this.sancionService = sancionService;
     }
 
     public Prestamo registrarPrestamo(String isbnRecurso, int dniSocio)
@@ -38,7 +42,8 @@ public class PrestamoService {
             RecursoNoEncontradoException,
             SocioNoEncontradoException,
             RecursoNoDisponibleException,
-            LimitePrestamosExcedidoException {
+            LimitePrestamosExcedidoException,
+            SocioSancionadoException {
 
         if (isbnRecurso == null || isbnRecurso.isBlank()) {
             throw new PrestamoInvalidoException("El ISBN del recurso no puede estar vacio");
@@ -53,8 +58,13 @@ public class PrestamoService {
         Socio socio = socioRepository.buscarPorDni(dniSocio)
                 .orElseThrow(() -> new SocioNoEncontradoException(dniSocio));
 
+        if (sancionService.buscarSancionActiva(dniSocio, LocalDate.now()).isPresent()) {
+            throw new SocioSancionadoException(
+                    "El socio con DNI " + dniSocio + " tiene una sancion activa y no puede registrar nuevos prestamos");
+        }
+
         if (!recurso.estaDisponible()) {
-            throw new RecursoNoDisponibleException("El recurso con ISBN " + isbnRecurso + " no esta disponible");
+            throw new RecursoNoDisponibleException("El recurso con ISBN " + isbnRecurso + " no está disponible");
         }
 
         if (prestamoRepository.buscarActivoPorIsbnRecurso(isbnRecurso).isPresent()) {
@@ -64,7 +74,7 @@ public class PrestamoService {
         List<Prestamo> prestamosActivos = prestamoRepository.buscarActivosPorDniSocio(dniSocio);
         if (prestamosActivos.size() >= socio.getTipo().getMaximoLibros()) {
             throw new LimitePrestamosExcedidoException(
-                    "El socio con DNI " + dniSocio + " alcanzo el limite de prestamos ("
+                    "El socio con DNI " + dniSocio + " alcanzo el límite de prestamos ("
                             + socio.getTipo().getMaximoLibros() + ")");
         }
 
@@ -103,6 +113,10 @@ public class PrestamoService {
         }
 
         prestamo.registrarDevolucion(fechaDevolucion, diasRetraso);
+
+        if (diasRetraso > 0) {
+            sancionService.aplicarSancionPorRetraso(prestamo.getDniSocio(), fechaDevolucion, diasRetraso);
+        }
 
         return prestamo;
     }
