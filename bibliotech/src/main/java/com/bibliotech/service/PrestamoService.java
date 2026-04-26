@@ -64,7 +64,7 @@ public class PrestamoService {
         List<Prestamo> prestamosActivos = prestamoRepository.buscarActivosPorDniSocio(dniSocio);
         if (prestamosActivos.size() >= socio.getTipo().getMaximoLibros()) {
             throw new LimitePrestamosExcedidoException(
-                    "El socio con DNI " + dniSocio + " alcanzo el límite de prestamos ("
+                    "El socio con DNI " + dniSocio + " alcanzo el limite de prestamos ("
                             + socio.getTipo().getMaximoLibros() + ")");
         }
 
@@ -111,5 +111,33 @@ public class PrestamoService {
             throws PrestamoInvalidoException,
             PrestamoNoEncontradoException {
         return registrarDevolucion(isbnRecurso, LocalDate.now());
+    }
+
+    public List<Prestamo> obtenerHistorialCompleto() {
+        return prestamoRepository.buscarTodos();
+    }
+
+    public List<Prestamo> obtenerHistorialPorSocio(int dniSocio)
+            throws PrestamoInvalidoException,
+            SocioNoEncontradoException {
+        if (dniSocio <= 0) {
+            throw new PrestamoInvalidoException("El DNI del socio debe ser mayor a 0");
+        }
+        socioRepository.buscarPorDni(dniSocio)
+                .orElseThrow(() -> new SocioNoEncontradoException(dniSocio));
+
+        return prestamoRepository.buscarHistorialPorDniSocio(dniSocio);
+    }
+
+    public List<Prestamo> obtenerHistorialPorRecurso(String isbnRecurso)
+            throws PrestamoInvalidoException,
+            RecursoNoEncontradoException {
+        if (isbnRecurso == null || isbnRecurso.isBlank()) {
+            throw new PrestamoInvalidoException("El ISBN del recurso no puede estar vacio");
+        }
+        recursoRepository.buscarPorIsbn(isbnRecurso)
+                .orElseThrow(() -> new RecursoNoEncontradoException(isbnRecurso));
+
+        return prestamoRepository.buscarHistorialPorIsbnRecurso(isbnRecurso);
     }
 }
