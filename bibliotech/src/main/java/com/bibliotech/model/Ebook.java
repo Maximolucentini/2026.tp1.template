@@ -7,4 +7,10 @@ public record Ebook(
         int anio,
         Categoria categoria,
         String formatoArchivo
-) implements Recurso {}
+) implements Recurso {
+
+    @Override
+    public boolean estaDisponible() {
+        return true;
+    }
+}

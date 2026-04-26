@@ -6,4 +6,5 @@ public interface Recurso {
      String autor();
      int anio();
      Categoria categoria();
+     boolean estaDisponible();
 }

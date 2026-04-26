@@ -7,4 +7,10 @@ public record LibroFisico(
         int anio,
         Categoria categoria,
         boolean disponible
-) implements  Recurso {}
+) implements Recurso {
+
+    @Override
+    public boolean estaDisponible() {
+        return disponible;
+    }
+}
