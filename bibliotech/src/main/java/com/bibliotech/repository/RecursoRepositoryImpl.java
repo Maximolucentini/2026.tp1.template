@@ -1,8 +1,7 @@
 package com.bibliotech.repository;
 
-
-import com.bibliotech.model.Recurso;
 import com.bibliotech.model.Categoria;
+import com.bibliotech.model.Recurso;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -17,19 +16,22 @@ public class RecursoRepositoryImpl<T extends Recurso> implements RecursoReposito
     }
 
     @Override
+    public Optional<T> buscarPorId(String isbn) {
+        return recursos.stream()
+                .filter(recurso -> recurso.isbn().equals(isbn))
+                .findFirst();
+    }
+
+    @Override
     public Optional<T> buscarPorIsbn(String isbn) {
-        for (T recurso : recursos) {
-            if (recurso.isbn().equals(isbn)) {
-                return Optional.of(recurso);
-            }
-        }
-        return Optional.empty();
+        return buscarPorId(isbn);
     }
 
     @Override
     public List<T> buscarTodos() {
         return new ArrayList<>(recursos);
     }
+
     @Override
     public List<T> buscarPorTitulo(String titulo) {
         return recursos.stream()
