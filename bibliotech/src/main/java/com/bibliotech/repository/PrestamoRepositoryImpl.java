@@ -32,7 +32,7 @@ public class PrestamoRepositoryImpl implements PrestamoRepository {
     @Override
     public List<Prestamo> buscarActivosPorDniSocio(int dniSocio) {
         return prestamos.stream()
-                .filter(prestamo -> prestamo.getDniSocio() == dniSocio && prestamo.estaActivo())
+                .filter(p -> p.getDniSocio() == dniSocio && p.estaActivo())
                 .toList();
     }
 
@@ -42,7 +42,26 @@ public class PrestamoRepositoryImpl implements PrestamoRepository {
             return Optional.empty();
         }
         return prestamos.stream()
-                .filter(prestamo -> prestamo.getIsbnRecurso().equals(isbnRecurso) && prestamo.estaActivo())
+                .filter(p -> p.getIsbnRecurso().equals(isbnRecurso) && p.estaActivo())
                 .findFirst();
+    }
+
+    @Override
+    public List<Prestamo> buscarHistorialPorDniSocio(int dniSocio) {
+        return prestamos.stream()
+                .filter(p -> p.getDniSocio() == dniSocio)
+                .toList();
+    }
+
+    @Override
+    public List<Prestamo> buscarHistorialPorIsbnRecurso(String isbnRecurso) {
+        if (isbnRecurso == null) {
+            return new ArrayList<>();
+        }
+
+        return prestamos.stream()
+                .filter(p -> isbnRecurso.equals(p.getIsbnRecurso()))
+                .toList();
+
     }
 }
