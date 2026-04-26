@@ -20,16 +20,19 @@ public class SocioService {
             throw new SocioInvalidoException("El socio no puede ser null");
         }
         if (socio.getNombre() == null || socio.getNombre().isBlank()) {
-            throw new SocioInvalidoException("El nombre no puede estar vacío");
+            throw new SocioInvalidoException("El nombre no puede estar vacio");
         }
         if (socio.getDni() <= 0) {
             throw new SocioInvalidoException("El DNI debe ser mayor a 0");
         }
         if (socio.getEmail() == null || socio.getEmail().isBlank()) {
-            throw new SocioInvalidoException("El email no puede estar vacío");
+            throw new SocioInvalidoException("El email no puede estar vacio");
         }
         if (!emailValido(socio.getEmail())) {
-            throw new SocioInvalidoException("El email no tiene un formato válido");
+            throw new SocioInvalidoException("El email no tiene un formato valido");
+        }
+        if (socio.getTipo() == null) {
+            throw new SocioInvalidoException("El tipo de socio no puede ser null");
         }
         if (repository.buscarPorDni(socio.getDni()).isPresent()) {
             throw new SocioInvalidoException("Ya existe un socio con DNI: " + socio.getDni());
