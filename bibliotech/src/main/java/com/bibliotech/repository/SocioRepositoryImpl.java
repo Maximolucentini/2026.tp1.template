@@ -15,13 +15,18 @@ public class SocioRepositoryImpl implements SocioRepository {
     }
 
     @Override
-    public Optional<Socio> buscarPorDni(int dni) {
-        for (Socio socio : socios) {
-            if (socio.getDni() == dni) {
-                return Optional.of(socio);
-            }
+    public Optional<Socio> buscarPorId(Integer dni) {
+        if (dni == null) {
+            return Optional.empty();
         }
-        return Optional.empty();
+        return socios.stream()
+                .filter(socio -> socio.getDni() == dni)
+                .findFirst();
+    }
+
+    @Override
+    public Optional<Socio> buscarPorDni(int dni) {
+        return buscarPorId(dni);
     }
 
     @Override
