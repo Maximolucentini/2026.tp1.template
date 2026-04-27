@@ -1,0 +1,3 @@
+tipo;isbn;titulo;autor;anio;categoria;disponible;formatoArchivo
+LIBRO_FISICO;978-0-13-468599-1;Clean Code;Robert C. Martin;2008;TECNOLOGIA;true;
+EBOOK;978-0-13-235088-4;The Pragmatic Programmer;David Thomas;2019;TECNOLOGIA;;PDF
