@@ -14,13 +14,11 @@ public class Main {
 
     private static final Scanner scanner = new Scanner(System.in);
 
-    // ── Repositorios ──────────────────────────────────────────────
     private static RecursoRepository<Recurso> recursoRepository;
     private static SocioRepository            socioRepository;
     private static PrestamoRepository         prestamoRepository;
     private static SancionRepository          sancionRepository;
 
-    // ── Servicios ─────────────────────────────────────────────────
     private static RecursoService<Recurso> recursoService;
     private static SocioService            socioService;
     private static SancionService          sancionService;
@@ -68,7 +66,6 @@ public class Main {
         }
     }
 
-    // ── Menú ──────────────────────────────────────────────────────
 
     private static void mostrarMenu() {
         System.out.println("\n=== BiblioTech ===");
@@ -125,7 +122,6 @@ public class Main {
             System.out.println("Activo: " + devuelto.estaActivo());
 
             System.out.println("\n=== Intento de prestamo con sancion activa ===");
-            // Aplicamos una sanción activa desde hoy para garantizar que el bloqueo funcione
             sancionService.aplicarSancionPorRetraso(estudiante.getDni(), LocalDate.now(), 3);
             try {
                 prestamoService.registrarPrestamo("978-0-13-235088-4", 12345678);

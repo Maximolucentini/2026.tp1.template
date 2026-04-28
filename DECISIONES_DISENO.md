@@ -44,3 +44,20 @@ Como bonus, agregue sanciones: si un socio devuelve tarde, queda bloqueado por l
 ## Persistencia CSV
 
 Tambien agregue persistencia en CSV para recursos y socios.
+
+## Main CLI
+
+Se creo un `Main.java` como interfaz simple por consola.
+
+El menu permite probar las operaciones principales del sistema:
+
+- ejecutar una demo completa;
+- registrar libros fisicos y e-books;
+- registrar socios;
+- buscar recursos;
+- registrar prestamos;
+- registrar devoluciones;
+- ver historial;
+- guardar y cargar datos CSV.
+
+La logica importante no esta en el `Main`, sino en los services. El `Main` solo se encarga de pedir datos por consola y llamar a los metodos correspondientes.
